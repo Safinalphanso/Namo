@@ -2,33 +2,35 @@
 
 import { ShoppingCart, Sun, Moon, Menu } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Button } from './ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from './ui/sheet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Button } from '@/app/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/app/components/ui/sheet';
 import { useCart } from '@/app/hooks/use-cart';
-import { Badge } from './ui/badge';
+import { Badge } from '@/app/components/ui/badge';
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
-  const { cart } = useCart();
+  const [mounted, setMounted] = useState(false);
 
-  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  // Ensures theme is applied on client-side only
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
+    // { name: 'New Arrivals', href: '/new-arrivals' },
+    // { name: 'Sale', href: '/sale' },
+    // { name: 'Admin', href: '/admin' },
   ];
 
   return (
     <nav className="border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
+          {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="text-2xl font-bold">
               Namo
@@ -41,43 +43,39 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="relative text-sm font-medium px-4 py-2 transition-all duration-500 delay-2000
+                          rounded-full hover:bg-black hover:text-white 
+                          dark:hover:bg-white dark:hover:text-black"
               >
                 {item.name}
+                <span className="absolute inset-0 rounded-full scale-95 opacity-0 transition-all duration-500 delay-2000 ease-in-out 
+                                hover:scale-100 hover:opacity-100"></span>
               </Link>
             ))}
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
+            {/* Theme Toggle (Only renders on client-side) */}
+            {mounted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              >
+                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </Button>
+            )}
 
+            {/* Shopping Cart */}
             <Button variant="ghost" size="icon" asChild className="relative">
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
-                {cartItemCount > 0 && (
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
-                  >
-                    {cartItemCount}
-                  </Badge>
-                )}
               </Link>
             </Button>
 
             {/* Mobile Menu */}
             <div className="md:hidden">
-              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon">
                     <Menu className="h-5 w-5" />
@@ -89,10 +87,13 @@ export default function Navbar() {
                       <Link
                         key={item.name}
                         href={item.href}
-                        className="text-sm font-medium hover:text-primary transition-colors"
-                        onClick={() => setIsOpen(false)}
+                        className="relative text-sm font-medium px-4 py-2 transition-all duration-500 delay-2000
+                                  rounded-full hover:bg-black hover:text-white 
+                                  dark:hover:bg-white dark:hover:text-black"
                       >
                         {item.name}
+                        <span className="absolute inset-0 rounded-full scale-95 opacity-0 transition-all duration-500 delay-2000 ease-in-out 
+                                        hover:scale-100 hover:opacity-100"></span>
                       </Link>
                     ))}
                   </div>

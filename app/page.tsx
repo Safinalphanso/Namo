@@ -61,6 +61,14 @@ const featuredProducts = [
     category: 'Gift',
     description: 'Ancient frankincense fragrance for spiritual rituals.',
   },
+  {
+    id: 8,
+    name: 'Pack',
+    price: 20.99,
+    image: 'https://i.pinimg.com/474x/92/ae/27/92ae27943c4cb8220ff2ecab8bfbfa82.jpg',
+    category: 'Gift',
+    description: 'Ancient frankincense fragrance for spiritual rituals.',
+  },
 ];
 
 export default function Home() {
