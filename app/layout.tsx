@@ -8,8 +8,8 @@ import Navbar from './components/navbar';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'StyleHub - Modern Fashion Store',
-  description: 'Your one-stop destination for trendy fashion',
+  title: 'Namo',
+  description: 'Your one-stop destination for Premium Incense Sticks',
 };
 
 export default function RootLayout({

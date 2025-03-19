@@ -6,14 +6,17 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/app/components/ui/sheet';
-import { useCart } from '@/app/hooks/use-cart';
+import { useCart } from '@/app/hooks/use-cart'; // Importing cart hook
 import { Badge } from '@/app/components/ui/badge';
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { cart } = useCart(); // Extracting cart data
 
-  // Ensures theme is applied on client-side only
+  // Calculate total number of items in the cart
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -21,9 +24,6 @@ export default function Navbar() {
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Shop', href: '/shop' },
-    // { name: 'New Arrivals', href: '/new-arrivals' },
-    // { name: 'Sale', href: '/sale' },
-    // { name: 'Admin', href: '/admin' },
   ];
 
   return (
@@ -66,10 +66,15 @@ export default function Navbar() {
               </Button>
             )}
 
-            {/* Shopping Cart */}
+            {/* Shopping Cart with Badge */}
             <Button variant="ghost" size="icon" asChild className="relative">
-              <Link href="/cart">
+              <Link href="/cart" className="relative">
                 <ShoppingCart className="h-5 w-5" />
+                {cartItemCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
+                    {cartItemCount}
+                  </Badge>
+                )}
               </Link>
             </Button>
 

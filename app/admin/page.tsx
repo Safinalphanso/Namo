@@ -1,118 +1,69 @@
 "use client";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState({ totalSales: 0, totalOrders: 0, stock: 0 });
-  const [products, setProducts] = useState<Product[]>([]);
-  const [newProduct, setNewProduct] = useState({ name: "", price: "", stock: "" });
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
-  interface StatsResponse {
-    totalSales: number;
-    totalOrders: number;
-    stock: number;
-  }
+export default function LoginPage() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
-  interface Product {
-    _id: string;
-    name: string;
-    price: number;
-    stock: number;
-  }
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    axios.get<StatsResponse>("http://localhost:3000/admin/stats").then((res) => setStats(res.data));
-    axios.get<Product[]>("http://localhost:3000/admin/products").then((res) => setProducts(res.data));
-  }, []);
-
-  const addProduct = async () => {
-    const res = await axios.post("http://localhost:3000/admin/products", newProduct);
-    setProducts([...products, res.data]);
-  };
-
-  const deleteProduct = async (id: string) => {
-    await axios.delete(`http://localhost:3000/admin/products/${id}`);
-    setProducts(products.filter((product) => product._id !== id));
+    if (username === "Namo" && password === "admin") {
+      router.push("/dashboard");
+    } else {
+      setError("Invalid username or password");
+    }
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
-
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-3 gap-4">
-        <motion.div whileHover={{ scale: 1.05 }}>
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-xl font-semibold">💰 Total Sales</h3>
-              <p className="text-2xl">₹{stats.totalSales}</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div whileHover={{ scale: 1.05 }}>
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-xl font-semibold">📦 Orders Summary</h3>
-              <p className="text-2xl">{stats.totalOrders} Orders</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div whileHover={{ scale: 1.05 }}>
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-xl font-semibold">📊 Stock Available</h3>
-              <p className="text-2xl">{stats.stock} Items</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      {/* Product Management */}
-      <div className="mt-8">
-        <h3 className="text-xl font-semibold mb-4">🛍️ Manage Products</h3>
-
-        {/* Add Product Form */}
-        <div className="flex gap-4 mb-6">
-          <Input
-            placeholder="Product Name"
-            value={newProduct.name}
-            onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-500 to-indigo-600">
+      <div className="bg-white p-8 rounded-lg shadow-2xl w-96 text-center">
+        <h2 className="text-2xl font-bold text-gray-700 mb-4">Admin Login</h2>
+        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+            required
           />
-          <Input
-            placeholder="Price"
-            type="number"
-            value={newProduct.price}
-            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-          />
-          <Input
-            placeholder="Stock"
-            type="number"
-            value={newProduct.stock}
-            onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
-          />
-          <Button onClick={addProduct}>Add Product</Button>
-        </div>
 
-        {/* Product List */}
-        <div className="border rounded-lg p-4">
-          <h4 className="text-lg font-semibold mb-2">Product List</h4>
-          {products.length === 0 ? (
-            <p>No products found.</p>
-          ) : (
-            products.map((product) => (
-              <div key={product._id} className="flex justify-between p-2 border-b">
-                <span>{product.name} - ₹{product.price} - Stock: {product.stock}</span>
-                <Button variant="destructive" onClick={() => deleteProduct(product._id)}>❌ Delete</Button>
-              </div>
-            ))
-          )}
-        </div>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+              required
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-3 rounded-lg text-lg font-semibold transition-all hover:bg-indigo-700"
+          >
+            Login
+          </button>
+        </form>
+
+        <p className="text-sm text-gray-500 mt-4">Forgot password? <a href="#" className="text-indigo-600 font-semibold hover:underline">Reset it here</a></p>
       </div>
     </div>
   );

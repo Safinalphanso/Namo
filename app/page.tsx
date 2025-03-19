@@ -1,8 +1,11 @@
+'use client'
+
 import { Button } from '../app/components/ui/button';
 import { Card, CardContent } from '../app/components/ui/card';
 import { Badge } from '../app/components/ui/badge';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const featuredProducts = [
   {
@@ -29,49 +32,11 @@ const featuredProducts = [
     category: 'Incense',
     description: 'Romantic rose scent to uplift your mood.',
   },
-  {
-    id: 4,
-    name: 'Jasmine Incense',
-    price: 17.99,
-    image: 'https://i.pinimg.com/474x/d1/68/1f/d1681f1665f3e2700c7cbf7cce80f101.jpg',
-    category: 'Incense',
-    description: 'Sweet jasmine fragrance for a refreshing ambiance.',
-  },
-  {
-    id: 5,
-    name: 'Patchouli Incense',
-    price: 18.99,
-    image: 'https://i.pinimg.com/474x/ec/e6/99/ece6994b64fa7706314bf23bd5a1d6f9.jpg',
-    category: 'Incense',
-    description: 'Earthy patchouli scent for grounding and relaxation.',
-  },
-  {
-    id: 6,
-    name: 'Frankincense Incense',
-    price: 20.99,
-    image: 'https://i.pinimg.com/474x/0a/fe/2a/0afe2a988f65b682cf04c5206e31d505.jpg',
-    category: 'Incense',
-    description: 'Ancient frankincense fragrance for spiritual rituals.',
-  },
-  {
-    id: 7,
-    name: 'Pack',
-    price: 20.99,
-    image: 'https://i.pinimg.com/474x/92/ae/27/92ae27943c4cb8220ff2ecab8bfbfa82.jpg',
-    category: 'Gift',
-    description: 'Ancient frankincense fragrance for spiritual rituals.',
-  },
-  {
-    id: 8,
-    name: 'Pack',
-    price: 20.99,
-    image: 'https://i.pinimg.com/474x/92/ae/27/92ae27943c4cb8220ff2ecab8bfbfa82.jpg',
-    category: 'Gift',
-    description: 'Ancient frankincense fragrance for spiritual rituals.',
-  },
 ];
 
 export default function Home() {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   return (
     <main>
       {/* Hero Section */}
@@ -112,27 +77,25 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredProducts.map((product) => (
               <Card key={product.id} className="group">
-                {/* <Link href={/product/${product.id}}> */}
-                  <CardContent className="p-0">
-                    <div className="relative aspect-square overflow-hidden">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <Badge className="absolute top-2 right-2">
-                        {product.category}
-                      </Badge>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold mb-2">{product.name}</h3>
-                      <p className="text-lg font-bold">₹{product.price}</p>
-                    </div>
-                  </CardContent>
-                {/* </Link> */}
+                <CardContent className="p-0">
+                  <div className="relative aspect-square overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <Badge className="absolute top-2 right-2">
+                      {product.category}
+                    </Badge>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold mb-2">{product.name}</h3>
+                    <p className="text-lg font-bold">₹{product.price}</p>
+                  </div>
+                </CardContent>
               </Card>
             ))}
           </div>
